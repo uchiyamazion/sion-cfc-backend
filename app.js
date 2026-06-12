@@ -104,13 +104,15 @@ async function submitMachine(event) {
     btn.disabled = true;
 
     // 入力データの収集
-    const payload = {
+   const payload = {
         machineId: document.getElementById('form-machineId').value,
         facilityName: document.getElementById('form-facilityName').value,
         location: document.getElementById('form-location').value,
         manufacturer: document.getElementById('form-manufacturer').value,
         modelName: document.getElementById('form-modelName').value,
-        serialNumber: document.getElementById('form-serialNumber').value,
+        serialNumber: document.getElementById('form-serialNumber').value, // 追加
+        usage: document.getElementById('form-usage').value,               // 追加
+        output: document.getElementById('form-output').value,             // 追加
         gasType: document.getElementById('form-gasType').value,
         capacity: document.getElementById('form-capacity').value
     };
