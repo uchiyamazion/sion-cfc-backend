@@ -57,7 +57,9 @@
         <!-- コントロールパネル -->
         <div class="flex justify-between items-end mb-4 border-b border-gray-700 pb-2">
             <h2 class="text-xl font-semibold text-gray-200">フロン機器台帳</h2>
-            <button onclick="fetchMachineData()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-sm transition-colors shadow-lg shadow-cyan-500/20">
+            <button onclick="fetchMachineData()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-sm transition-colors shadow-lg shadow-cyan-500/20"><button onclick="openModal()" class="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm transition-colors shadow-lg shadow-green-500/20 mr-2">
+                <i class="fa-solid fa-plus mr-1"></i> 新規登録
+            </button>
                 <i class="fa-solid fa-rotate-right mr-1"></i> 最新に更新
             </button>
         </div>
@@ -85,7 +87,72 @@
         </div>
 
     </main>
+<div id="register-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-gray-800 border border-cyan-500/50 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-gray-800 z-10">
+                <h2 class="text-xl font-bold text-cyan-400"><i class="fa-solid fa-plus-circle mr-2"></i>新規機器の登録</h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="register-form" onsubmit="submitMachine(event)" class="p-6 space-y-4">
+                <p class="text-sm text-gray-400 mb-4">点検整備記録簿に基づく機器情報を入力してください。</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">機器管理番号 (システムID) <span class="text-red-400">*</span></label>
+                        <input type="text" id="form-machineId" required class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none" placeholder="例: MAC-001">
+                    </div>
 
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">施設名称 <span class="text-red-400">*</span></label>
+                        <input type="text" id="form-facilityName" required class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: スーパー環境 〇〇店">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">設置場所 (系統名)</label>
+                        <input type="text" id="form-location" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: 屋上 A-1系統">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">メーカー (設備製造者)</label>
+                        <input type="text" id="form-manufacturer" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: ダイキン工業">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">型式 <span class="text-red-400">*</span></label>
+                        <input type="text" id="form-modelName" required class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: RZRP112B">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">製造番号 (製番)</label>
+                        <input type="text" id="form-serialNumber" class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: 12345678">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">使用冷媒 (フロン種類) <span class="text-red-400">*</span></label>
+                        <select id="form-gasType" required class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none">
+                            <option value="">選択してください</option>
+                            <option value="R410A">R410A</option>
+                            <option value="R32">R32</option>
+                            <option value="R22">R22</option>
+                            <option value="R404A">R404A</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">初期総充填量 (kg) <span class="text-red-400">*</span></label>
+                        <input type="number" step="0.01" id="form-capacity" required class="w-full bg-gray-900 border border-gray-600 rounded-lg p-2.5 text-white focus:border-cyan-500 outline-none" placeholder="例: 25.0">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-700 mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">キャンセル</button>
+                    <button type="submit" id="submit-btn" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-medium rounded-lg shadow-lg shadow-cyan-500/30 transition-colors flex items-center">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> 台帳に登録する
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
