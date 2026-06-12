@@ -3,7 +3,7 @@
 // ==========================================
 
 // ★★★ ここに先ほど取得したGASのウェブアプリURLを貼り付けます ★★★
-const GAS_API_URL = "YOUR_GAS_URL_HERE";
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzBjLmHCUbf53orKDA4_eMNlqzPBenIHt2JLCP7-AZ3pXMJTaQua41wlU-uaSRxBweG/exec";
 
 // 画面読み込み時にデータ取得を実行
 document.addEventListener("DOMContentLoaded", () => {
