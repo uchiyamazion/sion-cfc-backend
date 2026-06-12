@@ -1,0 +1,13 @@
+{
+  "name": "sion-cfc-backend",
+  "version": "1.0.0",
+  "description": "シオンテクノス フロン管理システム バックエンドAPI",
+  "main": "src/main.gs",
+  "scripts": {
+    "push": "clasp push",
+    "watch": "clasp watch"
+  },
+  "devDependencies": {
+    "@google/clasp": "^2.4.2"
+  }
+}
