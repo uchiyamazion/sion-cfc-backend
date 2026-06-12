@@ -78,3 +78,69 @@ function showError(message) {
     document.getElementById('machine-list').innerHTML = 
         `<tr><td colspan="4" class="p-10 text-center text-red-400 bg-red-900/10 border-t border-b border-red-900/30"><i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i><br>${message}</td></tr>`;
 }
+// --- ここから下を app.js の末尾に追記 ---
+
+// モーダルの開閉処理
+function openModal() {
+    const modal = document.getElementById('register-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeModal() {
+    const modal = document.getElementById('register-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.getElementById('register-form').reset(); // フォームをクリア
+}
+
+// フォーム送信（GASへのPOSTリクエスト）
+async function submitMachine(event) {
+    event.preventDefault(); // 画面の再読み込みを防ぐ
+
+    const btn = document.getElementById('submit-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> 登録中...';
+    btn.disabled = true;
+
+    // 入力データの収集
+    const payload = {
+        machineId: document.getElementById('form-machineId').value,
+        facilityName: document.getElementById('form-facilityName').value,
+        location: document.getElementById('form-location').value,
+        manufacturer: document.getElementById('form-manufacturer').value,
+        modelName: document.getElementById('form-modelName').value,
+        serialNumber: document.getElementById('form-serialNumber').value,
+        gasType: document.getElementById('form-gasType').value,
+        capacity: document.getElementById('form-capacity').value
+    };
+
+    try {
+        // GASへPOST送信
+        const response = await fetch(GAS_API_URL, {
+            method: 'POST',
+            // text/plain にすることでCORSエラーを回避するテクニックです
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+                action: 'registerMachine', // GAS側で指定したアクション名
+                payload: payload
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            alert('機器の登録が完了しました！');
+            closeModal();
+            fetchMachineData(); // テーブルを最新に更新
+        } else {
+            alert('登録エラー: ' + result.message);
+        }
+    } catch (error) {
+        console.error("Post Error:", error);
+        alert('通信エラーが発生しました。ネットワークを確認してください。');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
